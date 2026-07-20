@@ -1,0 +1,7 @@
+bin/
+obj/
+installer/publish/
+installer/output/
+*.user
+*.suo
+*.pdb

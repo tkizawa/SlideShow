@@ -1,0 +1,65 @@
+﻿<Window x:Class="SlideShow.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SlideShow"
+        mc:Ignorable="d"
+        Title="SlideShow セットアップ"
+        Width="640"
+        Height="320"
+        WindowStartupLocation="CenterScreen"
+        Background="#111111"
+        Foreground="White"
+        ResizeMode="NoResize">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="スライドショーの設定"
+                   FontSize="24"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,18" />
+
+        <StackPanel Grid.Row="1" Margin="0,0,0,14">
+            <TextBlock Text="画像フォルダ" Margin="0,0,0,6" />
+            <DockPanel LastChildFill="True">
+                <Button Content="参照..."
+                        Width="88"
+                        Margin="12,0,0,0"
+                        Click="BrowseFolder_Click"
+                        DockPanel.Dock="Right" />
+                <TextBox x:Name="FolderPathTextBox"
+                         Height="30"
+                         VerticalContentAlignment="Center" />
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,18">
+            <StackPanel Width="180">
+                <TextBlock Text="切り替え間隔 (秒)" Margin="0,0,0,6" />
+                <TextBox x:Name="IntervalTextBox"
+                         Height="30"
+                         VerticalContentAlignment="Center"
+                         Text="3" />
+            </StackPanel>
+        </StackPanel>
+
+        <Button Grid.Row="3"
+                Content="開始"
+                Width="120"
+                Height="36"
+                HorizontalAlignment="Left"
+                Click="Start_Click" />
+
+        <TextBlock Grid.Row="4"
+                   VerticalAlignment="Bottom"
+                   Foreground="#B0B0B0"
+                   Text="対応形式: JPG, JPEG, PNG, BMP, GIF, WEBP" />
+    </Grid>
+</Window>
