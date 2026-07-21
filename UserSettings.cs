@@ -7,6 +7,7 @@ internal sealed class UserSettings
 {
     public string FolderPath { get; set; } = string.Empty;
     public double IntervalSeconds { get; set; } = 3;
+    public string MonitorDeviceName { get; set; } = string.Empty;
     public double? WindowLeft { get; set; }
     public double? WindowTop { get; set; }
 

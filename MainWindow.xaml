@@ -7,13 +7,14 @@
         mc:Ignorable="d"
         Title="SlideShow セットアップ"
         Width="640"
-        Height="320"
+        Height="380"
         WindowStartupLocation="CenterScreen"
         Background="#111111"
         Foreground="White"
         ResizeMode="NoResize">
     <Grid Margin="24">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -50,14 +51,22 @@
             </StackPanel>
         </StackPanel>
 
-        <Button Grid.Row="3"
+        <StackPanel Grid.Row="3" Width="320" Margin="0,0,0,18">
+            <TextBlock Text="表示モニタ" Margin="0,0,0,6" />
+            <ComboBox x:Name="MonitorComboBox"
+                      Height="30"
+                      VerticalContentAlignment="Center"
+                      DisplayMemberPath="DisplayName" />
+        </StackPanel>
+
+        <Button Grid.Row="4"
                 Content="開始"
                 Width="120"
                 Height="36"
                 HorizontalAlignment="Left"
                 Click="Start_Click" />
 
-        <TextBlock Grid.Row="4"
+        <TextBlock Grid.Row="5"
                    VerticalAlignment="Bottom"
                    Foreground="#B0B0B0"
                    Text="対応形式: JPG, JPEG, PNG, BMP, GIF, WEBP" />

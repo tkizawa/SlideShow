@@ -1,9 +1,12 @@
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Forms = System.Windows.Forms;
 
 namespace SlideShow;
 
@@ -15,15 +18,17 @@ public partial class SlideshowWindow : Window
     private readonly TimeSpan _interval;
     private readonly DispatcherTimer _timer;
     private readonly TimeSpan _fadeDuration = TimeSpan.FromMilliseconds(600);
+    private readonly Forms.Screen _targetScreen;
     private bool _isFrontActive = true;
     private int _currentIndex;
     private bool _isTransitioning;
 
-    public SlideshowWindow(string folderPath, TimeSpan interval)
+    public SlideshowWindow(string folderPath, TimeSpan interval, string monitorDeviceName)
     {
         InitializeComponent();
 
         _interval = interval;
+        _targetScreen = ResolveTargetScreen(monitorDeviceName);
         _imagePaths = Directory.EnumerateFiles(folderPath)
             .Where(path => SupportedExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))
             .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
@@ -34,7 +39,15 @@ public partial class SlideshowWindow : Window
             Interval = _interval
         };
         _timer.Tick += Timer_Tick;
+        SourceInitialized += SlideshowWindow_SourceInitialized;
     }
+
+    [DllImport("user32.dll", SetLastError = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetWindowPos(nint hWnd, nint hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
+
+    private const uint SwpNoZOrder = 0x0004;
+    private const uint SwpShowWindow = 0x0040;
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
@@ -52,6 +65,19 @@ public partial class SlideshowWindow : Window
 
         _timer.Start();
         Keyboard.Focus(this);
+    }
+
+    private void SlideshowWindow_SourceInitialized(object? sender, EventArgs e)
+    {
+        var bounds = _targetScreen.Bounds;
+        var handle = new WindowInteropHelper(this).Handle;
+
+        Left = bounds.Left;
+        Top = bounds.Top;
+        Width = bounds.Width;
+        Height = bounds.Height;
+
+        SetWindowPos(handle, nint.Zero, bounds.Left, bounds.Top, bounds.Width, bounds.Height, SwpNoZOrder | SwpShowWindow);
     }
 
     private async void Timer_Tick(object? sender, EventArgs e)
@@ -102,5 +128,12 @@ public partial class SlideshowWindow : Window
         {
             Close();
         }
+    }
+
+    private static Forms.Screen ResolveTargetScreen(string monitorDeviceName)
+    {
+        return Forms.Screen.AllScreens.FirstOrDefault(screen => string.Equals(screen.DeviceName, monitorDeviceName, StringComparison.OrdinalIgnoreCase))
+            ?? Forms.Screen.PrimaryScreen
+            ?? Forms.Screen.AllScreens.First();
     }
 }

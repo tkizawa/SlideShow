@@ -1,11 +1,13 @@
 ﻿using System.IO;
 using System.Windows;
+using Forms = System.Windows.Forms;
 
 namespace SlideShow;
 
 public partial class MainWindow : Window
 {
     private readonly UserSettings _settings;
+    private readonly MonitorOption[] _monitorOptions;
     private readonly double? _restoredLeft;
     private readonly double? _restoredTop;
 
@@ -14,6 +16,7 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _settings = UserSettings.Load();
+        _monitorOptions = BuildMonitorOptions();
         Closing += MainWindow_Closing;
         Loaded += MainWindow_Loaded;
 
@@ -24,6 +27,11 @@ public partial class MainWindow : Window
         IntervalTextBox.Text = _settings.IntervalSeconds > 0
             ? _settings.IntervalSeconds.ToString("0.###")
             : "3";
+
+        MonitorComboBox.ItemsSource = _monitorOptions;
+        MonitorComboBox.SelectedItem = _monitorOptions.FirstOrDefault(option => string.Equals(option.DeviceName, _settings.MonitorDeviceName, StringComparison.OrdinalIgnoreCase))
+            ?? _monitorOptions.FirstOrDefault(option => option.IsPrimary)
+            ?? _monitorOptions.FirstOrDefault();
 
         (_restoredLeft, _restoredTop) = GetRestoredWindowPosition();
         ApplyRestoredWindowPosition();
@@ -64,7 +72,7 @@ public partial class MainWindow : Window
 
         SaveSettings(folderPath, intervalSeconds);
 
-        var slideshowWindow = new SlideshowWindow(folderPath, TimeSpan.FromSeconds(intervalSeconds));
+        var slideshowWindow = new SlideshowWindow(folderPath, TimeSpan.FromSeconds(intervalSeconds), GetSelectedMonitorDeviceName());
         slideshowWindow.Show();
         Close();
     }
@@ -83,9 +91,15 @@ public partial class MainWindow : Window
     {
         _settings.FolderPath = folderPath;
         _settings.IntervalSeconds = intervalSeconds;
+        _settings.MonitorDeviceName = GetSelectedMonitorDeviceName();
         _settings.WindowLeft = Left;
         _settings.WindowTop = Top;
         _settings.Save();
+    }
+
+    private string GetSelectedMonitorDeviceName()
+    {
+        return (MonitorComboBox.SelectedItem as MonitorOption)?.DeviceName ?? string.Empty;
     }
 
     private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -122,4 +136,19 @@ public partial class MainWindow : Window
         Left = left;
         Top = top;
     }
+
+    private static MonitorOption[] BuildMonitorOptions()
+    {
+        return Forms.Screen.AllScreens
+            .Select((screen, index) =>
+            {
+                var primarySuffix = screen.Primary ? " (メイン)" : string.Empty;
+                var bounds = screen.Bounds;
+                var displayName = $"モニタ {index + 1}{primarySuffix} - {bounds.Width}x{bounds.Height} ({bounds.X}, {bounds.Y})";
+                return new MonitorOption(screen.DeviceName, displayName, screen.Primary);
+            })
+            .ToArray();
+    }
+
+    private sealed record MonitorOption(string DeviceName, string DisplayName, bool IsPrimary);
 }
