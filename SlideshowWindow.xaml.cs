@@ -82,6 +82,11 @@ public partial class SlideshowWindow : Window
 
     private async void Timer_Tick(object? sender, EventArgs e)
     {
+        await ShowNextImageAsync();
+    }
+
+    private async System.Threading.Tasks.Task ShowNextImageAsync()
+    {
         if (_isTransitioning || _imagePaths.Length <= 1)
         {
             return;
@@ -122,12 +127,21 @@ public partial class SlideshowWindow : Window
         imageControl.Source = bitmap;
     }
 
-    private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+    private async void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == Key.Escape)
         {
             Close();
         }
+        else if (e.Key == Key.Space)
+        {
+            await ShowNextImageAsync();
+        }
+    }
+
+    private async void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        await ShowNextImageAsync();
     }
 
     private static Forms.Screen ResolveTargetScreen(string monitorDeviceName)

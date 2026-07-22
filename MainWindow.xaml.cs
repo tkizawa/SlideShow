@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Windows;
 using Forms = System.Windows.Forms;
 
@@ -19,6 +19,9 @@ public partial class MainWindow : Window
         _monitorOptions = BuildMonitorOptions();
         Closing += MainWindow_Closing;
         Loaded += MainWindow_Loaded;
+
+        var version = typeof(MainWindow).Assembly.GetName().Version;
+        VersionTextBlock.Text = $"SlideShow Version {version}";
 
         FolderPathTextBox.Text = string.IsNullOrWhiteSpace(_settings.FolderPath)
             ? Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)

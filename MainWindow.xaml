@@ -1,4 +1,4 @@
-﻿<Window x:Class="SlideShow.MainWindow"
+<Window x:Class="SlideShow.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="SlideShow セットアップ"
         Width="640"
-        Height="380"
+        Height="400"
         WindowStartupLocation="CenterScreen"
         Background="#111111"
         Foreground="White"
@@ -51,7 +51,7 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Width="320" Margin="0,0,0,18">
+        <StackPanel Grid.Row="3" Width="320" Margin="0,0,0,18" HorizontalAlignment="Left">
             <TextBlock Text="表示モニタ" Margin="0,0,0,6" />
             <ComboBox x:Name="MonitorComboBox"
                       Height="30"
@@ -70,5 +70,11 @@
                    VerticalAlignment="Bottom"
                    Foreground="#B0B0B0"
                    Text="対応形式: JPG, JPEG, PNG, BMP, GIF, WEBP" />
+
+        <TextBlock x:Name="VersionTextBlock"
+                   Grid.Row="5"
+                   HorizontalAlignment="Right"
+                   VerticalAlignment="Bottom"
+                   Foreground="#B0B0B0" />
     </Grid>
 </Window>

@@ -12,6 +12,7 @@
         ShowInTaskbar="True"
         Title="SlideShow"
         KeyDown="Window_KeyDown"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Loaded="Window_Loaded">
     <Grid Background="Black">
         <Image x:Name="FrontImage"
