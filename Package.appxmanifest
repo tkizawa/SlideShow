@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <Identity
+    Name="57742TomokazuKizawa.WoodStreamSlideShow"
+    Publisher="CN=963B8572-7B10-48CC-9F90-46F0022D6A68"
+    Version="1.0.2.0" />
+
+  <Properties>
+    <DisplayName>WoodStream SlideShow</DisplayName>
+    <PublisherDisplayName>Tomokazu Kizawa</PublisherDisplayName>
+    <Logo>assets\store\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="ja-JP" />
+    <Resource Language="en-US" />
+  </Resources>
+
+  <Applications>
+    <Application Id="SlideShow" Executable="SlideShow.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="WoodStream SlideShow"
+        Description="指定した画像フォルダ内の画像を一定間隔で全画面表示する WPF スライドショーアプリです。"
+        BackgroundColor="#111111"
+        Square150x150Logo="assets\store\Square150x150Logo.png"
+        Square44x44Logo="assets\store\Square44x44Logo.png">
+        <uap:DefaultTile
+          Wide310x150Logo="assets\store\Wide310x150Logo.png"
+          Square310x310Logo="assets\store\LargeTile.png" />
+      </uap:VisualElements>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
