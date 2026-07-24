@@ -3,11 +3,19 @@ using System.Text.Json;
 
 namespace SlideShow;
 
+public enum SortOrder
+{
+    FileName,
+    CreationDate,
+    Random
+}
+
 internal sealed class UserSettings
 {
     public string FolderPath { get; set; } = string.Empty;
     public double IntervalSeconds { get; set; } = 3;
     public string MonitorDeviceName { get; set; } = string.Empty;
+    public SortOrder Order { get; set; } = SortOrder.FileName;
     public double? WindowLeft { get; set; }
     public double? WindowTop { get; set; }
 

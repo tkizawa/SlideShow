@@ -23,16 +23,22 @@ public partial class SlideshowWindow : Window
     private int _currentIndex;
     private bool _isTransitioning;
 
-    public SlideshowWindow(string folderPath, TimeSpan interval, string monitorDeviceName)
+    public SlideshowWindow(string folderPath, TimeSpan interval, string monitorDeviceName, SortOrder sortOrder)
     {
         InitializeComponent();
 
         _interval = interval;
         _targetScreen = ResolveTargetScreen(monitorDeviceName);
-        _imagePaths = Directory.EnumerateFiles(folderPath)
-            .Where(path => SupportedExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase))
-            .OrderBy(path => path, StringComparer.OrdinalIgnoreCase)
-            .ToArray();
+        
+        var files = Directory.EnumerateFiles(folderPath)
+            .Where(path => SupportedExtensions.Contains(Path.GetExtension(path), StringComparer.OrdinalIgnoreCase));
+
+        _imagePaths = sortOrder switch
+        {
+            SortOrder.CreationDate => files.OrderBy(path => File.GetCreationTime(path)).ToArray(),
+            SortOrder.Random => files.OrderBy(_ => Guid.NewGuid()).ToArray(),
+            _ => files.OrderBy(path => path, StringComparer.OrdinalIgnoreCase).ToArray()
+        };
 
         _timer = new DispatcherTimer
         {

@@ -1,5 +1,5 @@
 #define MyAppName "SlideShow"
-#define MyAppVersion "1.0.0.2"
+#define MyAppVersion "1.0.3.0"
 #define MyAppPublisher "SlideShow"
 #define MyAppExeName "SlideShow.exe"
 #define MyAppIcon "..\assets\app.ico"

@@ -49,6 +49,13 @@
                          VerticalContentAlignment="Center"
                          Text="3" />
             </StackPanel>
+            <StackPanel Width="180" Margin="16,0,0,0">
+                <TextBlock Text="表示順" Margin="0,0,0,6" />
+                <ComboBox x:Name="SortOrderComboBox"
+                          Height="30"
+                          VerticalContentAlignment="Center"
+                          DisplayMemberPath="DisplayName" />
+            </StackPanel>
         </StackPanel>
 
         <StackPanel Grid.Row="3" Width="320" Margin="0,0,0,18" HorizontalAlignment="Left">

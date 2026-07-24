@@ -8,6 +8,11 @@ public partial class MainWindow : Window
 {
     private readonly UserSettings _settings;
     private readonly MonitorOption[] _monitorOptions;
+    private readonly SortOrderOption[] _sortOrderOptions = [
+        new(SortOrder.FileName, "ファイル名順"),
+        new(SortOrder.CreationDate, "作成日順"),
+        new(SortOrder.Random, "ランダム")
+    ];
     private readonly double? _restoredLeft;
     private readonly double? _restoredTop;
 
@@ -35,6 +40,10 @@ public partial class MainWindow : Window
         MonitorComboBox.SelectedItem = _monitorOptions.FirstOrDefault(option => string.Equals(option.DeviceName, _settings.MonitorDeviceName, StringComparison.OrdinalIgnoreCase))
             ?? _monitorOptions.FirstOrDefault(option => option.IsPrimary)
             ?? _monitorOptions.FirstOrDefault();
+
+        SortOrderComboBox.ItemsSource = _sortOrderOptions;
+        SortOrderComboBox.SelectedItem = _sortOrderOptions.FirstOrDefault(o => o.Order == _settings.Order)
+            ?? _sortOrderOptions.FirstOrDefault();
 
         (_restoredLeft, _restoredTop) = GetRestoredWindowPosition();
         ApplyRestoredWindowPosition();
@@ -75,7 +84,7 @@ public partial class MainWindow : Window
 
         SaveSettings(folderPath, intervalSeconds);
 
-        var slideshowWindow = new SlideshowWindow(folderPath, TimeSpan.FromSeconds(intervalSeconds), GetSelectedMonitorDeviceName());
+        var slideshowWindow = new SlideshowWindow(folderPath, TimeSpan.FromSeconds(intervalSeconds), GetSelectedMonitorDeviceName(), _settings.Order);
         slideshowWindow.Show();
         Close();
     }
@@ -95,6 +104,7 @@ public partial class MainWindow : Window
         _settings.FolderPath = folderPath;
         _settings.IntervalSeconds = intervalSeconds;
         _settings.MonitorDeviceName = GetSelectedMonitorDeviceName();
+        _settings.Order = (SortOrderComboBox.SelectedItem as SortOrderOption)?.Order ?? SortOrder.FileName;
         _settings.WindowLeft = Left;
         _settings.WindowTop = Top;
         _settings.Save();
@@ -154,4 +164,5 @@ public partial class MainWindow : Window
     }
 
     private sealed record MonitorOption(string DeviceName, string DisplayName, bool IsPrimary);
+    private sealed record SortOrderOption(SortOrder Order, string DisplayName);
 }
